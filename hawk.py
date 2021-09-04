@@ -24,31 +24,30 @@ from torch.nn import ReLU
 
 frame_skip = 8
 half_life_seconds = 3
-num_instances = 4
+num_instances = 6
 team_size = 3
 fps = 120 / frame_skip
 gamma = np.exp(np.log(0.5) / (fps * half_life_seconds))
-steps = 500
-batch_size = num_instances * team_size * steps
+intended_batch_size = 10_000
+steps = int(intended_batch_size/(num_instances*2))
+batch_size = steps*num_instances*2
 
 
 def get_match():
     reward_one = CombinedReward(
         (
             VelocityPlayerToBallReward(),
-            NaiveSpeedReward(),
             TouchBallReward(min_touch=0.5, aerial_weight=0.2),
         ),
-        (1.0, 1.0, 1.0),
+        (1.0, 1.0),
     )
     reward_two = CombinedReward(
         (
             ThreeManRewards(),
-            NaiveSpeedReward(),
             VelocityBallDefense(),
             PositioningReward(),
         ),
-        (1.0, 0.5, 1.0, 1.0),
+        (1.0, 1.0, 1.0),
     )
     reward_three = CombinedReward(
         (
@@ -71,7 +70,7 @@ def get_match():
     return Match(
         team_size=team_size,
         tick_skip=frame_skip,
-        reward_function=AnnealRewards(reward_one, 10_000_000, reward_two, 200_000_000, reward_three),
+        reward_function=AnnealRewards(reward_one, 40_000_000, reward_two, 400_000_000, reward_three),
         self_play=True,
         terminal_conditions=[
             TimeoutCondition(fps * 300),
