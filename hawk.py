@@ -29,8 +29,8 @@ team_size = 3
 fps = 120 / frame_skip
 gamma = np.exp(np.log(0.5) / (fps * half_life_seconds))
 intended_batch_size = 10_000
-steps = int(intended_batch_size/(num_instances*2))
-batch_size = steps*num_instances*2
+steps = int(intended_batch_size/(num_instances*2*team_size))
+batch_size = steps*num_instances*2*team_size
 
 
 def get_match():
