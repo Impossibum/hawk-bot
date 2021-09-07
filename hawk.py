@@ -70,7 +70,7 @@ def get_match():
     return Match(
         team_size=team_size,
         tick_skip=frame_skip,
-        reward_function=AnnealRewards(reward_one, 40_000_000, reward_two, 400_000_000, reward_three),
+        reward_function=AnnealRewards(reward_one, 10_000_000, reward_two, 150_000_000, reward_three),
         self_play=True,
         terminal_conditions=[
             TimeoutCondition(fps * 300),
